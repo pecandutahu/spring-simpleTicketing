@@ -14,31 +14,36 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.ticketing.simpleticketin.models.Ticket;
 import com.ticketing.simpleticketin.repositories.TicketRepository;
+import com.ticketing.simpleticketin.services.TicketService;
 
 @RestController
-@RequestMapping("/ticket")
+@RequestMapping("/ticket") //Definisikan routes
 public class TicketController {
     @Autowired
-    TicketRepository ticketRepository;
+    TicketService ticketService; // sebagai penghubung dengan class service
 
-    @PostMapping
+    // Fungsi untuk menangani permintaan create
+    @PostMapping // definisikan routes dengan method post
     public Ticket createTicket(@RequestBody Ticket ticket) {
-        return ticketRepository.save(ticket);
+        return ticketService.saveTicket(ticket); 
     }
 
+    // Fungsi untuk menangani permintaan list ticket
     @GetMapping
     public List<Ticket> getAllTickets(){
-        return ticketRepository.findAll();
+        return ticketService.getAllTicket();
     }
 
+    // Fungsi untuk menangani permintaan tiket secara sepesifik
     @GetMapping("/{id}")
     public Ticket getTicket(@PathVariable Long id){
-        return ticketRepository.findById(id).orElseThrow();
+        return ticketService.getTicketById(id);
     }
 
+    // Fungsi untuk menangani permintaan delete tiket
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteTicket(@PathVariable Long id){
-        ticketRepository.deleteById(id);
+        ticketService.deleteTicket(id);
         
         return new ResponseEntity<>("Ticket with ID " + id + " deleted successfully", HttpStatus.OK);
     }
